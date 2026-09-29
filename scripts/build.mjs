@@ -87,16 +87,30 @@ const html = `<!doctype html>
       ? 'https://view.officeapps.live.com/op/embed.aspx?src=' + encodeURIComponent(abs)
       : el.dataset.kind === 'pdf' ? abs : null;
     if (!src) { el.innerHTML = '<div class="ph">No preview for this file type. Use Download.</div>'; return; }
+    el.innerHTML = '';
     const f = document.createElement('iframe'); f.src = src; f.title = 'Document preview'; f.allowFullscreen = true;
     el.appendChild(f);
   };
-  const viewers = document.querySelectorAll('.viewer');
+  const viewers = [...document.querySelectorAll('.viewer')];
+  const MAX_LIVE = 2;        // at most this many Office viewers alive at once
+  const DWELL_MS = 450;      // must stay on screen this long (skips smooth-scroll pass-through)
+  const live = [];
+  const unload = (el) => { el.innerHTML = ''; delete el.dataset.loaded; };
+  const activate = (el) => {
+    if (!el.dataset.loaded) load(el);
+    const i = live.indexOf(el); if (i >= 0) live.splice(i, 1); live.push(el);
+    while (live.length > MAX_LIVE) unload(live.shift());
+  };
   if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
     viewers.forEach((el) => { el.innerHTML = '<div class="ph">Preview works only on the live site (Office viewer needs a public URL).</div>'; });
   } else {
-    const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && load(e.target)), { rootMargin: '600px 0px' });
+    viewers.forEach((el) => { el.innerHTML = '<div class="ph">Loading preview…</div>'; });
+    const timers = new Map();
+    const io = new IntersectionObserver((es) => es.forEach((e) => {
+      clearTimeout(timers.get(e.target));
+      if (e.isIntersecting) timers.set(e.target, setTimeout(() => activate(e.target), DWELL_MS));
+    }), { threshold: 0.2 });
     viewers.forEach((el) => io.observe(el));
-    addEventListener('hashchange', () => { const s = document.querySelector(location.hash + ' .viewer'); if (s) load(s); });
   }
 </script>
 </body>
