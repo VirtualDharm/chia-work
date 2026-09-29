@@ -1,5 +1,5 @@
 // Adds a document, or appends a new input/output turn if the id already exists.
-// Usage: node scripts/add.mjs "<path to file>" --title "..." --input "..." --output "..." [--id slug] [--date YYYY-MM-DD]
+// Usage: node scripts/add.mjs "<path to file>" [--from-inbox <key>] --title "..." --input "..." --output "..." [--id slug] [--date YYYY-MM-DD]
 import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
 import { join, extname, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,7 +18,13 @@ copyFileSync(src, join(root, 'files', file));
 const path = join(root, 'docs.json');
 const docs = JSON.parse(readFileSync(path, 'utf8'));
 const today = new Date().toISOString().slice(0, 10);
-const turn = { date: opt.date || today, input: opt.input || '', output: opt.output || '' };
+let inboxInput = '';
+if (opt['from-inbox']) {
+  const { readItem } = await import('./inbox.mjs');
+  const q = await readItem(opt['from-inbox']);
+  inboxInput = q.name ? `${q.text} (from ${q.name})` : q.text;
+}
+const turn = { date: opt.date || today, input: opt.input || inboxInput, output: opt.output || '' };
 const at = docs.findIndex((d) => d.id === id);
 if (at >= 0) {
   // Same document again: replace the file, append this exchange to its thread.
@@ -31,3 +37,4 @@ if (at >= 0) {
 }
 writeFileSync(path, JSON.stringify(docs, null, 2) + '\n');
 console.log(`${at >= 0 ? 'appended turn to' : 'added'} "${id}" (files/${file})`);
+if (opt['from-inbox']) { const { removeItem } = await import('./inbox.mjs'); await removeItem(opt['from-inbox']); console.log('removed from inbox:', opt['from-inbox']); }

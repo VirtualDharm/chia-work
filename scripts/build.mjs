@@ -35,6 +35,19 @@ const sections = docs.map((d, i) => `
           <div class="msg out"><h3>Claude · output ${j + 1}</h3><p>${esc(t.output)}</p></div>
         </li>`).join('')}
       </ol>
+      <div class="ask" data-doc="${esc(d.id)}">
+        <div class="pending" hidden><h3>Waiting for Claude</h3><ul></ul></div>
+        <form>
+          <label for="ask-${esc(d.id)}">Next prompt for Claude</label>
+          <textarea id="ask-${esc(d.id)}" name="text" rows="3" maxlength="2000" required placeholder="What should Claude do next with this document?"></textarea>
+          <div class="row">
+            <input name="name" maxlength="60" placeholder="Your name (optional)" autocomplete="name">
+            <input name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+            <button type="submit">Send to Claude</button>
+          </div>
+          <p class="status" role="status"></p>
+        </form>
+      </div>
       <div class="viewer" data-kind="${kind(d.file)}" data-file="files/${encodeURIComponent(d.file)}"></div>
       <p class="links"><a href="files/${encodeURIComponent(d.file)}" download>Download ${label(d.file)}</a> · <a href="#top">Back to list</a></p>
     </section>`).join('');
@@ -71,6 +84,18 @@ const html = `<!doctype html>
   .msg h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 4px; font-weight: 600; }
   .msg p { margin: 0; }
   .turn.last .msg { border-color: var(--accent); }
+  .ask { margin: 0 0 16px; }
+  .ask h3, .ask label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 6px; font-weight: 600; }
+  .pending { border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
+  .pending ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .pending li small { color: var(--muted); }
+  .ask textarea, .ask input { width: 100%; font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; }
+  .ask textarea { resize: vertical; }
+  .ask .row { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 8px; }
+  .ask button { font: inherit; border: 0; border-radius: 6px; padding: 8px 14px; background: var(--accent); color: var(--card); cursor: pointer; }
+  .ask button[disabled] { opacity: .6; cursor: default; }
+  .ask .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .ask .status { margin: 6px 0 0; font-size: 14px; color: var(--muted); min-height: 1.2em; }
   .viewer { position: relative; width: 100%; aspect-ratio: 16 / 10.5; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
   .viewer iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .viewer .ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); }
@@ -121,6 +146,41 @@ const html = `<!doctype html>
     }), { threshold: 0.2 });
     viewers.forEach((el) => io.observe(el));
   }
+
+  // Prompt queue: show pending prompts and accept new ones.
+  const opened = Date.now();
+  const fmt = (iso) => new Date(iso).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' });
+  const renderPending = (box, items) => {
+    const wrap = box.querySelector('.pending'), ul = wrap.querySelector('ul');
+    ul.innerHTML = '';
+    items.forEach((it) => {
+      const li = document.createElement('li');
+      li.textContent = it.text;
+      const s = document.createElement('small'); s.textContent = ' · ' + (it.name ? it.name + ', ' : '') + fmt(it.createdAt);
+      li.appendChild(s); ul.appendChild(li);
+    });
+    wrap.hidden = !items.length;
+  };
+  document.querySelectorAll('.ask').forEach((box) => {
+    const doc = box.dataset.doc, form = box.querySelector('form'), status = box.querySelector('.status'), btn = form.querySelector('button');
+    let items = [];
+    fetch('/api/inbox?doc=' + encodeURIComponent(doc)).then((r) => r.ok ? r.json() : { pending: [] })
+      .then((j) => { items = j.pending || []; renderPending(box, items); }).catch(() => {});
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      btn.disabled = true; status.textContent = 'Sending…';
+      try {
+        const r = await fetch('/api/inbox', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ doc, text: fd.get('text'), name: fd.get('name'), website: fd.get('website'), t: opened }) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(j.error || 'Could not send.');
+        if (j.item) { items.push(j.item); renderPending(box, items); }
+        form.reset(); status.textContent = 'Sent. Claude will pick this up and the reply will appear above as the next output.';
+      } catch (err) { status.textContent = err.message; }
+      finally { btn.disabled = false; }
+    });
+  });
 </script>
 </body>
 </html>

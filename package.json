@@ -5,6 +5,10 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "add": "node scripts/add.mjs",
-    "deploy": "node scripts/build.mjs && vercel deploy --prod --yes"
+    "deploy": "node scripts/build.mjs && vercel deploy --prod --yes",
+    "inbox": "node scripts/inbox.mjs"
+  },
+  "dependencies": {
+    "@vercel/blob": "^2.8.0"
   }
 }
