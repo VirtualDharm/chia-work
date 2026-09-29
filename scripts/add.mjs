@@ -1,3 +1,4 @@
+// Adds a document, or appends a new input/output turn if the id already exists.
 // Usage: node scripts/add.mjs "<path to file>" --title "..." --input "..." --output "..." [--id slug] [--date YYYY-MM-DD]
 import { readFileSync, writeFileSync, copyFileSync } from 'node:fs';
 import { join, extname, basename, dirname } from 'node:path';
@@ -16,14 +17,17 @@ copyFileSync(src, join(root, 'files', file));
 
 const path = join(root, 'docs.json');
 const docs = JSON.parse(readFileSync(path, 'utf8'));
-const entry = {
-  id, file,
-  title: opt.title || basename(src, extname(src)),
-  date: opt.date || new Date().toISOString().slice(0, 10),
-  input: opt.input || '',
-  output: opt.output || '',
-};
+const today = new Date().toISOString().slice(0, 10);
+const turn = { date: opt.date || today, input: opt.input || '', output: opt.output || '' };
 const at = docs.findIndex((d) => d.id === id);
-if (at >= 0) docs[at] = { ...docs[at], ...entry }; else docs.unshift(entry);
+if (at >= 0) {
+  // Same document again: replace the file, append this exchange to its thread.
+  const d = docs[at];
+  const turns = Array.isArray(d.turns) ? d.turns : (d.input || d.output ? [{ date: d.date, input: d.input, output: d.output }] : []);
+  delete d.input; delete d.output;
+  docs[at] = { ...d, file, title: opt.title || d.title, date: turn.date, turns: [...turns, turn] };
+} else {
+  docs.unshift({ id, file, title: opt.title || basename(src, extname(src)), date: turn.date, turns: [turn] });
+}
 writeFileSync(path, JSON.stringify(docs, null, 2) + '\n');
-console.log(`${at >= 0 ? 'updated' : 'added'} "${entry.title}" as files/${file}`);
+console.log(`${at >= 0 ? 'appended turn to' : 'added'} "${id}" (files/${file})`);

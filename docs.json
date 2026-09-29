@@ -4,7 +4,32 @@
     "title": "Chlorpyrifos-Resistant PGPB from Rice Rhizosphere (final)",
     "file": "chlorpyrifos-rice-final.pptx",
     "date": "2026-09-11",
-    "input": "Reduce AI detection on the chlorpyrifos synopsis below 15%, keep the original copy, and list every change.",
-    "output": "Slides 2-4 rewritten in first-person student voice, methods turned into lab-note steps, MTCC positive controls and SHIATS DHAN-3 kept. Blind check went from 34% to 11%."
+    "turns": [
+      {
+        "date": "2026-09-09",
+        "input": "New chlorpyrifos deck. My checker rates it about 26% AI, mostly the research gap and the intro. Reduce it and tell me what you changed.",
+        "output": "Rewrote intro, research gap, objectives, tolerance and IAA slides in plain student voice. Hedged two claims the checker questioned (\"single highest-consumption pesticide\", \"Indo-Gangetic plain\"). Blind check: 19%."
+      },
+      {
+        "date": "2026-09-09",
+        "input": "Checker now says 21%. Bring it under 15%.",
+        "output": "Research gap rebuilt around what each of the four papers actually did (endophytes vs soil, pre-isolated strains). Methods slides cut to lab-note fragments, purpose clauses removed, speaker notes rewritten as prep reminders. Blind check: 12%."
+      },
+      {
+        "date": "2026-09-10",
+        "input": "Synopsis is finalised. I want the research papers cited in this PPT.",
+        "output": "Downloaded 5 of 10 open-access PDFs (Yadav 2025, Malik 2024, Prodhan 2023, Saengsanga 2023, Aloo 2022). Links for the rest: Gordon & Weber free on PMC, Feng 2017 and Schwyn 1987 paywalled, Cappuccino & Sherman is a textbook."
+      },
+      {
+        "date": "2026-09-10",
+        "input": "Try to find Pikovskaya 1948, any link works.",
+        "output": "No digital full text exists (1948 Russian journal). Gave catalogue records (CiNii, ScienceOpen, Semantic Scholar) and sources for the medium recipe (HiMedia M520 sheet, Prodhan 2023)."
+      },
+      {
+        "date": "2026-09-10",
+        "input": "New version Annu_rice_fixed rates 34% AI, mainly slides 2-4. Get it under 15%, keep an original copy, and list the differences.",
+        "output": "Kept Annu_rice_fixed_ORIGINAL.pptx. Rewrote slides 2-18 in student voice while keeping the new details (5 fields with pooled spots, MTCC positive controls, SHIATS DHAN-3, Tukey's test). Wrote a before/after file of all 74 changed blocks. Blind check: 11%."
+      }
+    ]
   }
 ]

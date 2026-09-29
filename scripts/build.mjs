@@ -11,6 +11,8 @@ const docs = JSON.parse(readFileSync(join(root, 'docs.json'), 'utf8'))
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const OFFICE = new Set(['.pptx', '.ppt', '.docx', '.doc', '.xlsx', '.xls']);
 const kind = (f) => (extname(f).toLowerCase() === '.pdf' ? 'pdf' : OFFICE.has(extname(f).toLowerCase()) ? 'office' : 'other');
+// Older entries have a single input/output; newer ones have a list of turns.
+const turnsOf = (d) => (Array.isArray(d.turns) && d.turns.length ? d.turns : [{ input: d.input || '', output: d.output || '', date: d.date }]);
 const label = (f) => extname(f).slice(1).toUpperCase();
 
 for (const d of docs) {
@@ -27,10 +29,12 @@ const sections = docs.map((d, i) => `
         <h2>${esc(d.title)}</h2>
         <span class="m">${label(d.file)} · ${esc(d.date || '')}</span>
       </header>
-      <div class="io">
-        <div><h3>Input</h3><p>${esc(d.input)}</p></div>
-        <div><h3>Output</h3><p>${esc(d.output)}</p></div>
-      </div>
+      <ol class="thread">${turnsOf(d).map((t, j, a) => `
+        <li class="turn${j === a.length - 1 ? ' last' : ''}">
+          <div class="msg in"><h3>Input ${j + 1}${t.date ? ` · ${esc(t.date)}` : ''}</h3><p>${esc(t.input)}</p></div>
+          <div class="msg out"><h3>Claude · output ${j + 1}</h3><p>${esc(t.output)}</p></div>
+        </li>`).join('')}
+      </ol>
       <div class="viewer" data-kind="${kind(d.file)}" data-file="files/${encodeURIComponent(d.file)}"></div>
       <p class="links"><a href="files/${encodeURIComponent(d.file)}" download>Download ${label(d.file)}</a> · <a href="#top">Back to list</a></p>
     </section>`).join('');
@@ -59,15 +63,20 @@ const html = `<!doctype html>
   .doc { scroll-margin-top: 16px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 20px; margin-bottom: 40px; }
   .doc header { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: baseline; margin-bottom: 14px; }
   .doc h2 { font-size: 19px; margin: 0; }
-  .io { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  .io h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 4px; }
-  .io p { margin: 0; }
+  ol.thread { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 10px; }
+  .turn { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .msg { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .msg.in { background: var(--bg); }
+  .msg.out { border-left: 3px solid var(--accent); }
+  .msg h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 4px; font-weight: 600; }
+  .msg p { margin: 0; }
+  .turn.last .msg { border-color: var(--accent); }
   .viewer { position: relative; width: 100%; aspect-ratio: 16 / 10.5; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
   .viewer iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
   .viewer .ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); }
   .links { margin: 12px 0 0; font-size: 14px; }
   .links a { color: var(--accent); }
-  @media (max-width: 700px) { .io { grid-template-columns: 1fr; } .viewer { aspect-ratio: 3 / 4; } ol.index a, .doc header { grid-template-columns: 32px 1fr; } ol.index .m, .doc header .m { grid-column: 2; } }
+  @media (max-width: 700px) { .turn { grid-template-columns: 1fr; } .viewer { aspect-ratio: 3 / 4; } ol.index a, .doc header { grid-template-columns: 32px 1fr; } ol.index .m, .doc header .m { grid-column: 2; } }
 </style>
 </head>
 <body>

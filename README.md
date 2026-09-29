@@ -9,6 +9,6 @@ viewer (PPT/DOCX/XLSX via Microsoft's Office web viewer, PDF via the browser).
 node scripts/add.mjs "/path/to/deck.pptx" --title "Title" --input "What was asked" --output "What was delivered"
 npm run deploy
 ```
-Re-adding with the same `--id` (or same title) replaces the old entry.
+Re-adding with the same `--id` (or same title) swaps in the new file and appends that input/output as the next turn in the thread.
 
 Pages send `noindex` so search engines skip them; anyone with the link can view.
