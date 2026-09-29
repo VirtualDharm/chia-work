@@ -73,7 +73,7 @@ const html = `<!doctype html>
 <body>
 <main id="top">
   <h1>Chiya's Work</h1>
-  <p class="sub">${docs.length} documents. Click a name to jump to it.</p>
+  <p class="sub">${docs.length} ${docs.length === 1 ? "document" : "documents"}. Click a name to jump to it.</p>
   <ol class="index">${index}
   </ol>${sections}
 </main>
