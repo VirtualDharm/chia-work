@@ -6,37 +6,5 @@
     "date": "2026-09-11",
     "input": "Reduce AI detection on the chlorpyrifos synopsis below 15%, keep the original copy, and list every change.",
     "output": "Slides 2-4 rewritten in first-person student voice, methods turned into lab-note steps, MTCC positive controls and SHIATS DHAN-3 kept. Blind check went from 34% to 11%."
-  },
-  {
-    "id": "chlorpyrifos-student-style",
-    "title": "Chlorpyrifos synopsis, student-style version",
-    "file": "chlorpyrifos-student-style.pptx",
-    "date": "2026-09-09",
-    "input": "This deck reads about 26% AI. Bring it under 15% and tell me what you changed.",
-    "output": "Four passes: research gap rebuilt around what each paper actually did, methods cut to fragments, speaker notes rewritten as prep reminders. Blind check 26% to 12%."
-  },
-  {
-    "id": "cypermethrin-rice",
-    "title": "Cypermethrin-Resistant PGPR from Rice, Prayagraj",
-    "file": "cypermethrin-rice.pptx",
-    "date": "2026-09-08",
-    "input": "Advisor wants a pesticide commonly used in Prayagraj/U.P. Every method must come from a paper, with at least three plant experiments.",
-    "output": "New 18-slide synopsis: every step cited (Bhatt 2020, Gangola 2021, Saengsanga 2023), three plant experiments plus a degradation assay, 12 verified references."
-  },
-  {
-    "id": "psb-mustard",
-    "title": "Phosphate-Solubilizing Bacteria from Mustard Rhizosphere",
-    "file": "psb-mustard.pptx",
-    "date": "2026-09-08",
-    "input": "Topic changed. Suggest easy lab-friendly topics, then build the deck for phosphate solubilizers.",
-    "output": "15-slide synopsis on Pikovskaya screening, solubilization index, molybdate-blue quantification, pH/temperature effect and mustard seed germination."
-  },
-  {
-    "id": "nitrile-hydratase",
-    "title": "Nitrile-Hydratase-Producing Bacteria from Contaminated Samples",
-    "file": "nitrile-hydratase.pptx",
-    "date": "2026-09-07",
-    "input": "The checker rates this deck 38% AI. Get it under 15% without breaking the science.",
-    "output": "Five passes across introduction, gap, methods and statistics. All numbers and 7 citations kept, unverified claims hedged. Blind check 38% to 12%."
   }
 ]
