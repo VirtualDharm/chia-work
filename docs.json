@@ -9,6 +9,11 @@
         "date": "2026-09-30",
         "input": "Make notes from the MSCMB syllabus, MBFT 814 Microbial Biotechnology (Semester III), only for the mid-term topics: introduction, history, types of bioreactors, types of fermentation, enzyme production, immobilization of enzymes, screening and strain improvement, antibiotic production, vitamin production. Use the class PDFs on history and bioreactors as reference.",
         "output": "10-page exam notes covering the 9 topics in order, with tables for bioreactor types, fermentation modes, SmF vs SSF, enzyme sources, immobilization methods, strain improvement, penicillin production, riboflavin and B12, plus exam-point boxes, an 18-fact quick-revision sheet and 10 likely questions."
+      },
+      {
+        "date": "2026-09-30",
+        "input": "Make these MBFT 814 notes more detailed.",
+        "output": "Expanded from 10 to 29 pages: each topic now has full explanations, exam diagrams (batch growth curve, labelled stirred-tank fermenter, airlift, chemostat, 5 immobilization methods, enzyme and penicillin recovery flow charts), kinetics (Monod, chemostat), mutagen and screening tables, biosynthesis of penicillin, streptomycin/tetracycline/griseofulvin details, riboflavin and B12 processes, plus a 31-fact revision sheet and question bank."
       }
     ]
   },
