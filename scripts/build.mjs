@@ -1,5 +1,6 @@
 // Builds dist/index.html from docs.json and copies files/ into dist/files/.
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, extname, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -13,6 +14,9 @@ const OFFICE = new Set(['.pptx', '.ppt', '.docx', '.doc', '.xlsx', '.xls']);
 const kind = (f) => (extname(f).toLowerCase() === '.pdf' ? 'pdf' : OFFICE.has(extname(f).toLowerCase()) ? 'office' : 'other');
 // Older entries have a single input/output; newer ones have a list of turns.
 const turnsOf = (d) => (Array.isArray(d.turns) && d.turns.length ? d.turns : [{ input: d.input || '', output: d.output || '', date: d.date }]);
+// Content hash in the URL: Office's web viewer caches by URL, so a changed file needs a new URL.
+const ver = (f) => createHash('sha1').update(readFileSync(join(root, 'files', f))).digest('hex').slice(0, 10);
+const furl = (f) => `files/${encodeURIComponent(f)}?v=${ver(f)}`;
 const label = (f) => extname(f).slice(1).toUpperCase();
 
 for (const d of docs) {
@@ -48,8 +52,8 @@ const sections = docs.map((d, i) => `
           <p class="status" role="status"></p>
         </form>
       </div>
-      <div class="viewer" data-kind="${kind(d.file)}" data-file="files/${encodeURIComponent(d.file)}"></div>
-      <p class="links"><a href="files/${encodeURIComponent(d.file)}" download>Download ${label(d.file)}</a> · <a href="#top">Back to list</a></p>
+      <div class="viewer" data-kind="${kind(d.file)}" data-file="${furl(d.file)}"></div>
+      <p class="links"><a href="${furl(d.file)}" download>Download ${label(d.file)}</a> · <a href="#top">Back to list</a></p>
     </section>`).join('');
 
 const html = `<!doctype html>
