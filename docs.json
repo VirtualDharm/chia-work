@@ -1,5 +1,18 @@
 [
   {
+    "id": "enterobacteriaceae-assignment",
+    "file": "enterobacteriaceae-assignment.docx",
+    "title": "Assignment: Enterobacteriaceae",
+    "date": "2026-09-30",
+    "turns": [
+      {
+        "date": "2026-09-30",
+        "input": "Make an assignment on Enterobacteriaceae from the lecture outline (G. Ebenezer Jeyakumar, 26 Sep): characters, source of isolation, identification steps, pathogenic and non-pathogenic members, infections, paracolon, classification, identification methods, motility, biochemical reactions, differentiating table, antigenic structure, phage types. Add a SHUATS front page with the university logo.",
+        "output": "Wrote a 16-section Word assignment covering all 13 outline points, with a SHUATS-style front page (logo, department, JIBB, P.I.D.), a contents page, an infections table, a lactose-grouping table and a 13-organism x 12-test differentiating table. Includes the 2016 Enterobacterales reclassification and 6 textbook/journal references."
+      }
+    ]
+  },
+  {
     "id": "chlorpyrifos-rice-final",
     "title": "Chlorpyrifos-Resistant PGPB from Rice Rhizosphere (final)",
     "file": "chlorpyrifos-rice-final.pptx",
