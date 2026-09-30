@@ -1,18 +1,5 @@
 [
   {
-    "id": "mbft814-complete-notes",
-    "file": "mbft814-complete-notes.pdf",
-    "title": "MBFT 814 Microbial Biotechnology: Complete Notes (full syllabus)",
-    "date": "2026-09-30",
-    "turns": [
-      {
-        "date": "2026-09-30",
-        "input": "Make detailed long-form notes for an M.Sc. Microbiology student covering every topic of MBFT 814 Microbial Biotechnology.",
-        "output": "48-page notes, 18 chapters covering the whole syllabus: history and scope, bioreactors, fermentation types, screening and strain improvement, ethanol, glycerol, acetone-butanol-isopropanol, vinegar, lactic/citric/gluconic acids, riboflavin and B12, penicillin/streptomycin/tetracycline/griseofulvin, enzyme production, immobilization, SCP, biotransformation, all 5 practicals, plus a 29-fact revision sheet and question bank. 10 diagrams and flow charts."
-      }
-    ]
-  },
-  {
     "id": "mbft814-midterm-notes",
     "file": "mbft814-midterm-notes.pdf",
     "title": "MBFT 814 Microbial Biotechnology: Mid-term Notes",
@@ -27,6 +14,11 @@
         "date": "2026-09-30",
         "input": "Make these MBFT 814 notes more detailed.",
         "output": "Expanded from 10 to 29 pages: each topic now has full explanations, exam diagrams (batch growth curve, labelled stirred-tank fermenter, airlift, chemostat, 5 immobilization methods, enzyme and penicillin recovery flow charts), kinetics (Monod, chemostat), mutagen and screening tables, biosynthesis of penicillin, streptomycin/tetracycline/griseofulvin details, riboflavin and B12 processes, plus a 31-fact revision sheet and question bank."
+      },
+      {
+        "date": "2026-09-30",
+        "input": "Don't want the complete notes. Keep only the mid-term topics, but as detailed long-form notes covering each topic.",
+        "output": "Rebuilt the mid-term notes as a 36-page long-form version (about 15,300 words): each of the 9 topics now opens with a 1–2 page detailed prose explanation, followed by the tables, diagrams and exam points. Complete-syllabus notes removed from the site."
       }
     ]
   },
